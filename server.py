@@ -6,8 +6,10 @@ from waitress import serve # type: ignore
 from uuid import uuid4
 from npc.game import Game
 from npc.apps import Summarizer, generate_image
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, resources=r'/*')
 summarizer = Summarizer()
 
 # Utilities for operating the game
@@ -29,11 +31,12 @@ games: Dict[str, Game] = {}
 # API paths for the game
 @app.route("/api/start")
 def start():
+    print("/api/start")
     session_id = str(uuid4())
     games[session_id] = get_game()
     shem = games[session_id].agent.shem
     resp = {"sessionId": session_id, "shem": shem}
-    # print(resp)
+    print(resp)
     return resp
 
 @app.route("/api/stop/<session_id>")
@@ -45,6 +48,7 @@ def stop(session_id):
 
 @app.route("/api/step_world/<session_id>/<command>")
 async def step_world(session_id, command):
+    print("/api/step_world/")
     game = games[session_id]
     game.step_world(command)
     game_state = game.get_state()
@@ -109,7 +113,8 @@ if __name__ == "__main__":
     if debug:
         app.run(debug=True,
                 host="0.0.0.0",
-                port=8080)  
+                port=8081)  
 
     else:
-        serve(app, host="0.0.0.0", port=8080)
+        print("server start....")
+        serve(app, host="0.0.0.0", port=8081)

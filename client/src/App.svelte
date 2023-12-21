@@ -30,26 +30,26 @@ let llmTemp = 0.0;
 async function startGame() {
 	loading += 1;
 	if (sessionId) {
-	await fetch(`./api/stop/${sessionId}`)
+	await fetch(`http://localhost:8081/api/stop/${sessionId}`)
 		.then(response => response.json())
 		.then(data => {
 		// console.log(`Closed session: ${sessionId}`);
 		});
 	}
 
-	await fetch("./api/start")
+	await fetch("http://localhost:8081/api/start")
 	.then(response => response.json())
 	.then(data => {
 		sessionId = data.sessionId;
 		shem = data.shem;
-		// console.log(`Session ID: ${sessionId}`);
+		console.log(`Session ID: ${sessionId}`);
 		loading -= 1;
 	});
 };
 
 $: sendCommand = async () => {
 	loading += 2;
-	// console.log(command, suggestion)
+	console.log(command, suggestion)
 	if (command == "") {
 		command = suggestion
 		suggestion = ""
@@ -62,7 +62,7 @@ $: sendCommand = async () => {
 	thoughts = ""
 
 	// send command to server
-	await fetch(`./api/step_world/${sessionId}/${sent}`)
+	await fetch(`http://localhost:8081/api/step_world/${sessionId}/${sent}`)
 	.then(response => response.json())
 	.then(data => {
 		// console.log(data);
@@ -74,7 +74,7 @@ $: sendCommand = async () => {
 		loading -= 1;
 	});
 	
-	await fetch(`./api/get_image/${sessionId}`)
+	await fetch(`http://localhost:8081/api/get_image/${sessionId}`)
 	.then(response => response.json())
 	.then(data => {
 		background = data.image_url;
@@ -100,7 +100,7 @@ $: stepAgent = async () => {
 	}
 	command = "";
 	thoughts = "";
-	await fetch(`./api/step_agent/${sessionId}`)
+	await fetch(`http://localhost:8081/api/step_agent/${sessionId}`)
 	.then(response => response.json())
 	.then(data => {
 		// console.log(data);
@@ -117,7 +117,7 @@ $: stepAgent = async () => {
 $: buildNPC = async () => {
 	loading += 1;
 	toggleShem() 
-	await fetch(`./api/set_shem/`, {
+	await fetch(`http://localhost:8081/api/set_shem/`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

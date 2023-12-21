@@ -150,3 +150,7 @@ The frontend is built using [Svelte](https://svelte.dev/). The main API calls an
 Svelte compiles to javascript, so once the frontend is built, you can run the server without the frontend dependencies. The Flask backend will serve the frontend files from the `client/build` directory.
 
 The API functions in the main Svelte app are not very idiomatic. I think they should incorporte reactive assignment better. But they do the job for now.
+
+=================
+libfrotz.so 可以用这个生成
+https://github.com/microsoft/jericho/tree/master/frotz
